@@ -22,6 +22,14 @@ function LogWarning {
   }
 }
 
+function LogSuccess {
+  $esc = [char]27
+  $green = "${esc}[32m"
+  $reset = "${esc}[0m"
+
+  Write-Host "${green}##[section]$args${reset}"
+}
+
 function LogErrorForFile($file, $errorString)
 {
   if (Test-SupportsDevOpsLogging) {
