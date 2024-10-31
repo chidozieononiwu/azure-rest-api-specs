@@ -1,5 +1,6 @@
 name: Swagger APIView
 
+
 on:
   workflow_dispatch:
     inputs:
@@ -28,6 +29,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: ${{ github.event.inputs.PullRequestRef }}
+        fetch-depth: 0
 
     - name: Install .NET SDK
       uses: actions/setup-dotnet@v2
