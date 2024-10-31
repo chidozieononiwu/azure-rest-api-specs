@@ -18,9 +18,6 @@ on:
       PullRequestRef:
         description: 'Pull Request Reference'
         default: 'refs/pull/31320/merge'
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
