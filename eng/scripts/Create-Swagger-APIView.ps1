@@ -20,5 +20,5 @@ $apiViewArtifactsDirectory = [System.IO.Path]::Combine($ArtiFactsStagingDirector
 $publishedFiles = Get-ChildItem -Path $apiViewArtifactsDirectory -Directory -ErrorAction SilentlyContinue
 
 $publishedFiles | ForEach-Object {
-  LogInfo $_.FullName
+  LogInfo $_.BaseName
 }
