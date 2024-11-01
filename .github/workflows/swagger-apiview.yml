@@ -24,9 +24,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
-
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -49,7 +46,7 @@ jobs:
     - name: Generate Swagger APIView Tokens
       shell: pwsh
       run: |
-        eng/scripts/Swagger-APIView.ps1 `
+        eng/scripts/Create-Swagger-APIView-Artifacts.ps1 `
           -TempDirectory ${{ github.workspace }}/temp `
           -ArtiFactsStagingDirectory ${{ github.workspace }}/artifacts `
           -APIViewArtifactsDirectoryName ${{ github.event.inputs.APIViewArtifactsDirectoryName }}
@@ -61,3 +58,10 @@ jobs:
       with:
         name: swaggerAPIViewArtifacts
         path: ${{ github.workspace }}/artifacts/${{ github.event.inputs.APIViewArtifactsDirectoryName }}
+
+    - name: Create Swagger APIView
+      shell: pwsh
+      run: |
+        eng/scripts/Create-Swagger-APIView.ps1 `
+          -ArtiFactsStagingDirectory ${{ github.workspace }}/artifacts `
+          -APIViewArtifactsDirectoryName ${{ github.event.inputs.APIViewArtifactsDirectoryName }}
