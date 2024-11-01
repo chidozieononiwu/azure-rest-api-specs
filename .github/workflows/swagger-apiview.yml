@@ -18,7 +18,7 @@ on:
         default: 'SwaggerAPIViewArtifacts'
       PullRequestRef:
         description: 'Pull Request Reference'
-        default: 'refs/pull/31320/merge'
+        default: 'refs/pull/4/merge'
 
 jobs:
   build:
