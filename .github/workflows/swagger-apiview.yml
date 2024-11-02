@@ -68,6 +68,6 @@ jobs:
           -APIViewUri ${{ github.event.inputs.APIViewAPIUri }} `
           -BuildId ${{ github.run_id }} `
           -RepoName ${{ github.repository }} `
-          -PullRequestNumber ${{ github.event.pull_request.number }} `
+          -PullRequestNumber ${{ github.event.pull_request.number || github.event.inputs.PullRequestRef.split('/')[2] }} `
           -Language 'Swagger' `
           -CommitSha ${{ github.sha }}
