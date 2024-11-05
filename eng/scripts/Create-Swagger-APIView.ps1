@@ -44,12 +44,12 @@ $publishedPackages | ForEach-Object {
     }
   }
 
-  if (-not $query.ContainsKey('codeFile')) {
+  if (-not $query['codeFile']) {
     LogWarning "'New' APIView token file not found for resource provider '$($_.BaseName)'. Skipping APIView creation."
     return
   }
 
-  if (-not $query.ContainsKey('baselineCodeFile')) {
+  if (-not $query['baselineCodeFile']) {
     LogWarning "'Baseline' APIView token file not found for resource provider '$($_.BaseName)'. Skipping APIView creation."
     return
   }
@@ -68,6 +68,4 @@ $publishedPackages | ForEach-Object {
 
   LogInfo "Create APIView for resource provider '$($_.BaseName)'"
   LogInfo "APIView Uri: $($uri.Uri)"
-
-
 }
