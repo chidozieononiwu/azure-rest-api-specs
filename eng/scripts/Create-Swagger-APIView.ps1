@@ -31,6 +31,8 @@ param (
 $apiViewArtifactsDirectory = [System.IO.Path]::Combine($ArtiFactsStagingDirectory, $APIViewArtifactsDirectoryName)
 $publishedPackages = Get-ChildItem -Path $apiViewArtifactsDirectory -Directory -ErrorAction SilentlyContinue
 
+Write-Host "Published packages: $publishedPackages"
+
 $publishedPackages | ForEach-Object {
   $apiViewArtifacts = Get-ChildItem -Path $_.FullName -File -Filter "*.json" -ErrorAction SilentlyContinue
   $query = [System.Web.HttpUtility]::ParseQueryString('')
