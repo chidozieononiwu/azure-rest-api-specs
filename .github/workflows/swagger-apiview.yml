@@ -88,6 +88,12 @@ jobs:
         ref: ${{ env.PullRequestRef }}
         fetch-depth: 0
 
+    - name: Download Swagger APIView Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ env.APIViewArtifactsName }}
+        path: ${{ github.workspace }}/artifacts/${{ env.APIViewArtifactsDirectoryName }}
+
     - name: Create Swagger APIView
       shell: pwsh
       run: |
