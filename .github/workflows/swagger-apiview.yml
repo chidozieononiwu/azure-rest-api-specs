@@ -82,6 +82,12 @@ jobs:
     needs: generate-apiview-artifact
 
     steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ env.PullRequestRef }}
+        fetch-depth: 0
+
     - name: Create Swagger APIView
       shell: pwsh
       run: |
