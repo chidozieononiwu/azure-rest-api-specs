@@ -54,8 +54,8 @@ jobs:
           -APIViewArtifactsDirectoryName ${{ env.APIViewArtifactsDirectoryName }} `
           -APIViewArtifactsName ${{ env.APIViewArtifactsName }} `
           -APIViewUri ${{ env.APIViewAPIUri }} `
-          -BuildId ${{ github.run_id }} `
+          -BuildId ${{ github.event.workflow_run.id }} `
           -RepoName ${{ github.repository }} `
           -PullRequestNumber ${{ env.PullRequestNumber }} `
           -Language 'Swagger' `
-          -CommitSha ${{ github.sha }}
+          -CommitSha ${{ github.event.workflow_run.head_sha }}
