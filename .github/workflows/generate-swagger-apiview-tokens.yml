@@ -41,6 +41,12 @@ env:
 jobs:
   generate-apiview-artifact:
     runs-on: ubuntu-latest
+    outputs:
+      APIViewArtifactsDirectoryName: ${{ steps.set-outputs.outputs.APIViewArtifactsDirectoryName }}
+      APIViewArtifactsName: ${{ steps.set-outputs.outputs.APIViewArtifactsName }}
+      APIViewAPIUri: ${{ steps.set-outputs.outputs.APIViewAPIUri }}
+      PullRequestRef: ${{ steps.set-outputs.outputs.PullRequestRef }}
+      PullRequestNumber: ${{ steps.set-outputs.outputs.PullRequestNumber }}
 
     steps:
     - name: Checkout Repository
@@ -78,10 +84,10 @@ jobs:
         path: ${{ github.workspace }}/artifacts/${{ env.APIViewArtifactsDirectoryName }}
 
     - name: Set WorkFlow Outputs
-      id: create-apiview
+      id: set-outputs
       run: |
-        echo "::set-output name=APIViewArtifactsDirectoryName::${{ env.APIViewArtifactsDirectoryName }}"
-        echo "::set-output name=APIViewArtifactsName::${{ env.APIViewArtifactsName }}"
-        echo "::set-output name=APIViewAPIUri::${{ env.APIViewAPIUri }}"
-        echo "::set-output name=PullRequestRef::${{ env.PullRequestRef }}"
-        echo "::set-output name=PullRequestNumber::${{ env.PullRequestNumber }}"
+        echo "APIViewArtifactsDirectoryName=${{ env.APIViewArtifactsDirectoryName }}" >> $GITHUB_OUTPUT
+        echo "APIViewArtifactsName=${{ env.APIViewArtifactsName }}" >> $GITHUB_OUTPUT
+        echo "APIViewAPIUri=${{ env.APIViewAPIUri }}" >> $GITHUB_OUTPUT
+        echo "PullRequestRef=${{ env.PullRequestRef }}" >> $GITHUB_OUTPUT
+        echo "PullRequestNumber=${{ env.PullRequestNumber }}" >> $GITHUB_OUTPUT
