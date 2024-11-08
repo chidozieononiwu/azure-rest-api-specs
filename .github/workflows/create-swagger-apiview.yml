@@ -11,12 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.workflow_run.outputs.PullRequestRef }}
-        fetch-depth: 0
-
     - name: Download Workflow Artifacts
       uses: actions/download-artifact@v4
       with:
@@ -37,6 +31,12 @@ jobs:
         echo "PullRequestRef=$(echo $PARAMS | jq -r '.PullRequestRef')" >> $GITHUB_ENV
         echo "PullRequestNumber=$(echo $PARAMS | jq -r '.PullRequestNumber')" >> $GITHUB_ENV
 
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ env.PullRequestRef }}
+        fetch-depth: 0
+
     - name: Download Swagger APIView Artifacts
       uses: actions/download-artifact@v4
       with:
@@ -53,9 +53,9 @@ jobs:
           -ArtiFactsStagingDirectory ${{ github.workspace }}/artifacts `
           -APIViewArtifactsDirectoryName ${{ env.APIViewArtifactsDirectoryName }} `
           -APIViewArtifactsName ${{ env.APIViewArtifactsName }} `
-          -APIViewUri ${{ env.outputs.APIViewAPIUri }} `
+          -APIViewUri ${{ env.APIViewAPIUri }} `
           -BuildId ${{ github.run_id }} `
           -RepoName ${{ github.repository }} `
-          -PullRequestNumber ${{ env.outputs.PullRequestNumber }} `
+          -PullRequestNumber ${{ env.PullRequestNumber }} `
           -Language 'Swagger' `
           -CommitSha ${{ github.sha }}
