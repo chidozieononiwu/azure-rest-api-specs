@@ -17,22 +17,38 @@ jobs:
         ref: ${{ github.event.workflow_run.outputs.PullRequestRef }}
         fetch-depth: 0
 
+    - name: Download Workflow Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: workflow-params
+
+    - name: Read JSON File
+      id: read-json
+      run: |
+        PARAMS=$(cat output-parameters.json)
+        echo $PARAMS
+        echo "APIViewArtifactsDirectoryName=$(echo $PARAMS | jq -r '.APIViewArtifactsDirectoryName')" >> $GITHUB_ENV
+        echo "APIViewArtifactsName=$(echo $PARAMS | jq -r '.APIViewArtifactsName')" >> $GITHUB_ENV
+        echo "APIViewAPIUri=$(echo $PARAMS | jq -r '.APIViewAPIUri')" >> $GITHUB_ENV
+        echo "PullRequestRef=$(echo $PARAMS | jq -r '.PullRequestRef')" >> $GITHUB_ENV
+        echo "PullRequestNumber=$(echo $PARAMS | jq -r '.PullRequestNumber')" >> $GITHUB_ENV
+
     - name: Download Swagger APIView Artifacts
       uses: actions/download-artifact@v3
       with:
         name: ${{ env.APIViewArtifactsName }}
-        path: ${{ github.workspace }}/artifacts/${{ github.event.workflow_run.outputs.APIViewArtifactsDirectoryName }}
+        path: ${{ github.workspace }}/artifacts/${{ env.APIViewArtifactsDirectoryName }}
 
     - name: Create Swagger APIView
       shell: pwsh
       run: |
         eng/scripts/Create-Swagger-APIView.ps1 `
           -ArtiFactsStagingDirectory ${{ github.workspace }}/artifacts `
-          -APIViewArtifactsDirectoryName ${{ github.event.workflow_run.outputs.APIViewArtifactsDirectoryName }} `
-          -APIViewArtifactsName ${{ github.event.workflow_run.outputs.APIViewArtifactsName }} `
-          -APIViewUri ${{ github.event.workflow_run.outputs.APIViewAPIUri }} `
+          -APIViewArtifactsDirectoryName ${{ env.APIViewArtifactsDirectoryName }} `
+          -APIViewArtifactsName ${{ env.APIViewArtifactsName }} `
+          -APIViewUri ${{ env.outputs.APIViewAPIUri }} `
           -BuildId ${{ github.run_id }} `
           -RepoName ${{ github.repository }} `
-          -PullRequestNumber ${{ github.event.workflow_run.outputs.PullRequestNumber }} `
+          -PullRequestNumber ${{ env.outputs.PullRequestNumber }} `
           -Language 'Swagger' `
           -CommitSha ${{ github.sha }}
