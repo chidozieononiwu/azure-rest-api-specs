@@ -83,11 +83,20 @@ jobs:
         name: ${{ env.APIViewArtifactsName }}
         path: ${{ github.workspace }}/artifacts/${{ env.APIViewArtifactsDirectoryName }}
 
-    - name: Set WorkFlow Outputs
-      id: set-outputs
+    - name: Output Env Variables to JSON
       run: |
-        echo "APIViewArtifactsDirectoryName=${{ env.APIViewArtifactsDirectoryName }}" >> $GITHUB_OUTPUT
-        echo "APIViewArtifactsName=${{ env.APIViewArtifactsName }}" >> $GITHUB_OUTPUT
-        echo "APIViewAPIUri=${{ env.APIViewAPIUri }}" >> $GITHUB_OUTPUT
-        echo "PullRequestRef=${{ env.PullRequestRef }}" >> $GITHUB_OUTPUT
-        echo "PullRequestNumber=${{ env.PullRequestNumber }}" >> $GITHUB_OUTPUT
+        echo '{
+          "APIViewArtifactsDirectoryName": "${{ env.APIViewArtifactsDirectoryName }}",
+          "APIViewArtifactsName": "${{ env.APIViewArtifactsName }}",
+          "APIViewAPIUri": "${{ env.APIViewAPIUri }}",
+          "PullRequestRef": "${{ env.PullRequestRef }}",
+          "PullRequestNumber": "${{ env.PullRequestNumber }}",
+        }' > output-parameters.json
+        
+
+    - name: Upload JSON as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: workflow-params
+        path: output-parameters.json
+        
