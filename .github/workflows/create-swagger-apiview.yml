@@ -14,25 +14,25 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        ref: ${{ needs.create-apiview.outputs.PullRequestRef }}
+        ref: ${{ github.event.workflow_run.outputs.PullRequestRef }}
         fetch-depth: 0
 
     - name: Download Swagger APIView Artifacts
       uses: actions/download-artifact@v3
       with:
         name: ${{ env.APIViewArtifactsName }}
-        path: ${{ github.workspace }}/artifacts/${{ needs.create-apiview.outputs.APIViewArtifactsDirectoryName }}
+        path: ${{ github.workspace }}/artifacts/${{ github.event.workflow_run.outputs.APIViewArtifactsDirectoryName }}
 
     - name: Create Swagger APIView
       shell: pwsh
       run: |
         eng/scripts/Create-Swagger-APIView.ps1 `
           -ArtiFactsStagingDirectory ${{ github.workspace }}/artifacts `
-          -APIViewArtifactsDirectoryName ${{ needs.create-apiview.outputs.APIViewArtifactsDirectoryName }} `
-          -APIViewArtifactsName ${{ needs.create-apiview.outputs.APIViewArtifactsName }} `
-          -APIViewUri ${{ needs.create-apiview.outputs.APIViewAPIUri }} `
+          -APIViewArtifactsDirectoryName ${{ github.event.workflow_run.outputs.APIViewArtifactsDirectoryName }} `
+          -APIViewArtifactsName ${{ github.event.workflow_run.outputs.APIViewArtifactsName }} `
+          -APIViewUri ${{ github.event.workflow_run.outputs.APIViewAPIUri }} `
           -BuildId ${{ github.run_id }} `
           -RepoName ${{ github.repository }} `
-          -PullRequestNumber ${{ needs.create-apiview.outputs.PullRequestNumber }} `
+          -PullRequestNumber ${{ github.event.workflow_run.outputs.PullRequestNumber }} `
           -Language 'Swagger' `
           -CommitSha ${{ github.sha }}
