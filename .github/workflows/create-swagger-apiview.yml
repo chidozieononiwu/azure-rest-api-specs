@@ -1,0 +1,38 @@
+name: Create APIView
+
+on:
+  workflow_run:
+    workflows: ["Generate APIView Artifact"]
+    types:
+      - completed
+
+jobs:
+  create-apiview:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ needs.create-apiview.outputs.PullRequestRef }}
+        fetch-depth: 0
+
+    - name: Download Swagger APIView Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ env.APIViewArtifactsName }}
+        path: ${{ github.workspace }}/artifacts/${{ needs.create-apiview.outputs.APIViewArtifactsDirectoryName }}
+
+    - name: Create Swagger APIView
+      shell: pwsh
+      run: |
+        eng/scripts/Create-Swagger-APIView.ps1 `
+          -ArtiFactsStagingDirectory ${{ github.workspace }}/artifacts `
+          -APIViewArtifactsDirectoryName ${{ needs.create-apiview.outputs.APIViewArtifactsDirectoryName }} `
+          -APIViewArtifactsName ${{ needs.create-apiview.outputs.APIViewArtifactsName }} `
+          -APIViewUri ${{ needs.create-apiview.outputs.APIViewAPIUri }} `
+          -BuildId ${{ github.run_id }} `
+          -RepoName ${{ github.repository }} `
+          -PullRequestNumber ${{ needs.create-apiview.outputs.PullRequestNumber }} `
+          -Language 'Swagger' `
+          -CommitSha ${{ github.sha }}
