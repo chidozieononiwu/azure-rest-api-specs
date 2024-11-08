@@ -21,11 +21,14 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: workflow-params
+        path: ${{ github.workspace }}/artifacts/workflow-params
+        workflow: ${{ github.event.workflow_run.workflow }}
+        run-id: ${{ github.event.workflow_run.id }}
 
     - name: Read JSON File
       id: read-json
       run: |
-        PARAMS=$(cat output-parameters.json)
+        PARAMS=$(cat ${{ github.workspace }}/artifacts/workflow-params/output-parameters.json)
         echo $PARAMS
         echo "APIViewArtifactsDirectoryName=$(echo $PARAMS | jq -r '.APIViewArtifactsDirectoryName')" >> $GITHUB_ENV
         echo "APIViewArtifactsName=$(echo $PARAMS | jq -r '.APIViewArtifactsName')" >> $GITHUB_ENV
@@ -38,6 +41,8 @@ jobs:
       with:
         name: ${{ env.APIViewArtifactsName }}
         path: ${{ github.workspace }}/artifacts/${{ env.APIViewArtifactsDirectoryName }}
+        workflow: ${{ github.event.workflow_run.workflow }}
+        run-id: ${{ github.event.workflow_run.id }}
 
     - name: Create Swagger APIView
       shell: pwsh
