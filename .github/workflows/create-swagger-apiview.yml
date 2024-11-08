@@ -18,11 +18,12 @@ jobs:
         fetch-depth: 0
 
     - name: Download Workflow Artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: workflow-params
         path: ${{ github.workspace }}/artifacts/workflow-params
-        workflow: ${{ github.event.workflow_run.workflow }}
+        github-token: ${{ github.token }}
+        repository: ${{ github.repository }}
         run-id: ${{ github.event.workflow_run.id }}
 
     - name: Read JSON File
@@ -41,7 +42,8 @@ jobs:
       with:
         name: ${{ env.APIViewArtifactsName }}
         path: ${{ github.workspace }}/artifacts/${{ env.APIViewArtifactsDirectoryName }}
-        workflow: ${{ github.event.workflow_run.workflow }}
+        github-token: ${{ github.token }}
+        repository: ${{ github.repository }}
         run-id: ${{ github.event.workflow_run.id }}
 
     - name: Create Swagger APIView
