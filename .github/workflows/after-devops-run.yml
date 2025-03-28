@@ -1,0 +1,22 @@
+name: Follow up on DevOps run test
+
+on:
+  check_run:
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  event-handler:
+    permissions:
+      statuses: write # to set status (azure/azure-sdk-actions)
+      pull-requests: write # to read pull requests and write comments (azure/azure-sdk-actions)
+      checks: read # to read check status (azure/azure-sdk-actions)
+    name: Handle ${{ github.event_name }} ${{ github.event.action }} event
+    runs-on: ubuntu-latest # This image is intentionally set to "latest", and not to a specific version
+    steps:
+      - name: Get Pull Request Information
+        run: |
+          $check_run = '${{ toJson(github.event.check_run) }}'
+          Write-Host $check_run
+        shell: pwsh
