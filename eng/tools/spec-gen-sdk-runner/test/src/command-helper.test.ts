@@ -14,6 +14,7 @@ import {
   setPipelineVariables,
 } from "../../src/command-helpers.js";
 import { LogLevel } from "../../src/log.js";
+import { APIViewRequestData } from "../../src/types.js";
 
 // Get the absolute path to the repo root
 const currentFilePath = fileURLToPath(import.meta.url);
@@ -290,12 +291,16 @@ describe("commands.ts", () => {
       const mockBreakingchangeLabel = "breaking-change";
       const mockhasBreakingChange = false;
       const mockhasManagementPlaneSpecs = false;
+      const mockStagedArtifactsFolder = "mockStagedArtifactsFolder";
+      const mockApiViewRequestData: APIViewRequestData [] = [];
       const result = generateArtifact(
         mockCommandInput,
         mockResult,
         mockBreakingchangeLabel,
         mockhasBreakingChange,
         mockhasManagementPlaneSpecs,
+        mockStagedArtifactsFolder,
+        mockApiViewRequestData
       );
 
       const breakingChangeLabelArtifactPath = path.normalize(
@@ -326,6 +331,11 @@ describe("commands.ts", () => {
       expect(log.setVsoVariable).toHaveBeenCalledWith(
         "SpecGenSdkArtifactPath",
         "out/spec-gen-sdk-artifact",
+      );
+
+      expect(log.setVsoVariable).toHaveBeenCalledWith(
+        "StagedArtifactsFolder",
+        "mockStagedArtifactsFolder",
       );
       expect(log.setVsoVariable).toHaveBeenCalledWith("BreakingChangeLabelAction", "remove");
       expect(log.setVsoVariable).toHaveBeenCalledWith("BreakingChangeLabel", "breaking-change");
@@ -358,12 +368,16 @@ describe("commands.ts", () => {
       const mockBreakingchangeLabel = "breaking-change";
       const mockhasBreakingChange = false;
       const mockhasManagementPlaneSpecs = false;
+      const mockStagedArtifactsFolder = "";
+      const mockApiViewRequestData: APIViewRequestData [] = [];
       const result = generateArtifact(
         mockCommandInput,
         mockResult,
         mockBreakingchangeLabel,
         mockhasBreakingChange,
         mockhasManagementPlaneSpecs,
+        mockStagedArtifactsFolder,
+        mockApiViewRequestData,
       );
 
       expect(result).toBe(1);
