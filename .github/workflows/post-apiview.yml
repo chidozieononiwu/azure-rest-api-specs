@@ -1,6 +1,7 @@
 name: After APIView
 
 on:
+  workflow_dispatch:
   check_run:
     types: [completed]
     
@@ -12,18 +13,14 @@ jobs:
   post-apiview:
     name: After APIView
     runs-on: ubuntu-24.04
-    if: |
-      github.event.check_run.check_suite.app.name == 'Azure Pipelines' && (
-      contains(github.event.check_run.name, 'APIView') ||
-      contains(github.event.check_run.name, 'SDK Validation') )
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           sparse-checkout: 'eng/common'
     
-      - name: Create APIView Comment on PR
+      - name: Test GitHub Search API
         run: |
           . "eng/common/scripts/Helpers/ApiView-Helpers.ps1"
-          Set-ApiViewCommentForRelatedIssues -HeadCommitish ${{ github.event.check_run.head_sha }} -AuthToken ${{ secrets.GITHUB_TOKEN }}
+          Set-ApiViewCommentForRelatedIssues -HeadCommitish "f76ade73b5d491863ac5fc2228980091361e8b4a" -AuthToken ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
